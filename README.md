@@ -42,8 +42,20 @@ that temporarily and restores a normal ACL afterwards.
 
 ## Undo
 
-`Documents\EmojiFontBackup\revert-emoji.ps1` (right-click -> Run with PowerShell as admin)
-stages the original 1.29 font using the same mechanism, then reboot.
+Every update drops `revert-emoji.ps1` into `Documents\EmojiFontBackup`. Right-click it ->
+*Run with PowerShell* as administrator to stage the newest backup and reboot. The same
+script ships in this repo and can restore a specific file:
+
+    powershell -NoProfile -ExecutionPolicy Bypass -File revert-emoji.ps1 -Backup <backup.ttf>
+
+Add `-DryRun` to see what it would do without changing anything.
+
+`fonts-registry-backup.reg` and `fonts-registry-backup-wow64.reg` are exports of the
+stock `...\CurrentVersion\Fonts` registry keys, kept for reference.
+
+> The font binaries themselves are **not** bundled: `seguiemj.ttf` is Microsoft's property
+> and redistribution isn't permitted. Restore from your own backup, or point `-Source` at a
+> font file you obtained yourself.
 
 ## Notes
 

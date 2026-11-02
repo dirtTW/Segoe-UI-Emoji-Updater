@@ -70,3 +70,39 @@ into a higher-privilege context beyond the elevation the user approves.
 Safe to publish publicly as-is, with the un-pinned download understood as the
 main trade-off. If you later want stricter guarantees, add an expected SHA-256
 check for the downloaded font.
+
+---
+
+## Addendum — revert helper and registry exports
+
+Added after the first upload, same day. Re-audited.
+
+| File | SHA-256 | Notes |
+|---|---|---|
+| `revert-emoji.ps1` | `D263DC99BACB15BECD7204A8C2FF3294CFDAE6695A699FB39E9CB380C76162D2` | Standalone undo helper. |
+| `fonts-registry-backup.reg` | `71C9897799EF9A2D24C4A5CD9A9021EEEB7E8F0B2F02C4F71811C1A18F53E39D` | Export of HKLM `...\Fonts` (64-bit view). |
+| `fonts-registry-backup-wow64.reg` | `E56612C5BEB8E2DA600C2ACE72CF210DAAFB64D54625380767162B28E08537B4` | Export of the WOW6432Node `...\Fonts` (32-bit view). |
+
+Findings:
+
+- **Registry exports are clean.** They contain only two keys, both the standard
+  `...\Microsoft\Windows NT\CurrentVersion\Fonts` name-to-file mappings. No user
+  profile paths, SIDs, machine GUIDs, product keys, passwords or SAM data.
+- **`revert-emoji.ps1` behaves like the updater:** validates the family name, backs up
+  the current font before replacing, restores ACLs, and uses the same boot-time rename
+  queue when the file is locked. It requires administrator rights.
+- **Embedded copy.** `EmojiFontUpdater.cmd` also writes the same `revert-emoji.ps1`
+  (embedded between the `<#REVERT#>` / `<#/REVERT#>` markers) into the backup folder.
+  The embedded text was verified byte-identical to the standalone file, and both the
+  main and revert PowerShell sections were confirmed to parse.
+
+### Removed: bundled font binaries
+
+Three font files were briefly committed to this branch — `seguiemj-1.29-original.ttf`,
+`seguiemj-1.29-backup.ttf` (a byte-identical duplicate) and `seguiemj-1.60-new.ttf`. They
+were removed because `seguiemj.ttf` is Microsoft's property and redistribution is not
+covered by the Windows licence; publishing it publicly is a takedown risk.
+
+The commit that introduced them was rewritten so the binaries are absent from the entire
+repository history, and the remote branch was force-updated. The updater and
+`revert-emoji.ps1` do not depend on them — restore from a local backup or use `-Source`.
