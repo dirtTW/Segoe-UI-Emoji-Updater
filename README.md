@@ -1,17 +1,28 @@
-# Segoe UI Emoji updater (Windows 10)
+# Segoe UI Emoji updater (Windows 10 / 11)
 
-One double-click updates the Windows emoji font (`C:\Windows\Fonts\seguiemj.ttf`) to the
-newest build Microsoft ships, without breaking the font's security settings.
+**One file. Double-click it.** The Windows emoji font
+(`C:\Windows\Fonts\seguiemj.ttf`) is updated to the newest build, and your current font
+is backed up first. No setup, no copying files around, no arguments.
 
 ## Use
 
-Double-click **`EmojiFontUpdater.cmd`** and approve the UAC prompt. That's it.
+1. Double-click **`EmojiFontUpdater.cmd`**.
+2. Click **Yes** on the UAC prompt.
+3. Done.
 
-- If the font file is not in use, it is replaced immediately — just restart WhatsApp/Edge.
-- If it is in use (normal case), the swap is queued and runs before any app starts on the
-  next boot. The script asks whether to restart now.
+If the font is not in use it is replaced immediately — just restart WhatsApp/Edge.
+If it is in use (the normal case), the swap is queued and applied before any app starts
+on the next boot, and the script asks whether to restart now.
 
-## Options
+## Undo
+
+Run the same file with `-Undo` to restore the newest backup:
+
+```
+EmojiFontUpdater.cmd -Undo
+```
+
+## Options (optional)
 
 Run from a command prompt if you need them:
 
@@ -20,8 +31,9 @@ Run from a command prompt if you need them:
 | `-DryRun` | Show what would happen. No changes, no admin needed. |
 | `-Force` | Reinstall even if the installed font is the same version. |
 | `-Source <file.ttf>` | Install a local font file instead of downloading. |
+| `-Undo` | Restore the newest backup instead of updating. |
 
-Example: `EmojiFontUpdater.cmd -DryRun -Force`
+Example: `EmojiFontUpdater.cmd -Undo -DryRun`
 
 ## What it does
 
@@ -40,29 +52,15 @@ The queued rename needs `SYSTEM` to have delete rights on the source file — Wi
 gives it read access by default, which is exactly why a plain copy fails. The script grants
 that temporarily and restores a normal ACL afterwards.
 
-## Undo
-
-Every update drops `revert-emoji.ps1` into `Documents\EmojiFontBackup`. Right-click it ->
-*Run with PowerShell* as administrator to stage the newest backup and reboot. The same
-script ships in this repo and can restore a specific file:
-
-    powershell -NoProfile -ExecutionPolicy Bypass -File revert-emoji.ps1 -Backup <backup.ttf>
-
-Add `-DryRun` to see what it would do without changing anything.
-
-`fonts-registry-backup.reg` and `fonts-registry-backup-wow64.reg` are exports of the
-stock `...\CurrentVersion\Fonts` registry keys, kept for reference.
-
-> The font binaries themselves are **not** bundled: `seguiemj.ttf` is Microsoft's property
-> and redistribution isn't permitted. Restore from your own backup, or point `-Source` at a
-> font file you obtained yourself.
-
 ## Notes
 
 - Works on Windows 10 and 11. Needs internet unless `-Source` is used.
 - A cumulative update or `sfc /scannow` can put an older font back; just run the script again.
 - Native Windows 10 apps (WPF/.NET Framework) draw these glyphs as monochrome outlines;
   Chromium/WebView2 apps (WhatsApp, Edge, Chrome) show full colour.
+- The font binaries are **not** bundled: `seguiemj.ttf` is Microsoft's property and
+  redistribution isn't permitted. Restore from your own backup, or point `-Source` at a
+  font file you obtained yourself.
 
 ## License
 

@@ -73,13 +73,12 @@ check for the downloaded font.
 
 ---
 
-## Addendum — revert helper and registry exports
+## Addendum — registry exports, single-file undo, and refactor
 
-Added after the first upload, same day. Re-audited.
+Added/updated after the first upload. Re-audited.
 
 | File | SHA-256 | Notes |
 |---|---|---|
-| `revert-emoji.ps1` | `D263DC99BACB15BECD7204A8C2FF3294CFDAE6695A699FB39E9CB380C76162D2` | Standalone undo helper. |
 | `fonts-registry-backup.reg` | `71C9897799EF9A2D24C4A5CD9A9021EEEB7E8F0B2F02C4F71811C1A18F53E39D` | Export of HKLM `...\Fonts` (64-bit view). |
 | `fonts-registry-backup-wow64.reg` | `E56612C5BEB8E2DA600C2ACE72CF210DAAFB64D54625380767162B28E08537B4` | Export of the WOW6432Node `...\Fonts` (32-bit view). |
 
@@ -88,13 +87,13 @@ Findings:
 - **Registry exports are clean.** They contain only two keys, both the standard
   `...\Microsoft\Windows NT\CurrentVersion\Fonts` name-to-file mappings. No user
   profile paths, SIDs, machine GUIDs, product keys, passwords or SAM data.
-- **`revert-emoji.ps1` behaves like the updater:** validates the family name, backs up
-  the current font before replacing, restores ACLs, and uses the same boot-time rename
-  queue when the file is locked. It requires administrator rights.
-- **Embedded copy.** `EmojiFontUpdater.cmd` also writes the same `revert-emoji.ps1`
-  (embedded between the `<#REVERT#>` / `<#/REVERT#>` markers) into the backup folder.
-  The embedded text was verified byte-identical to the standalone file, and both the
-  main and revert PowerShell sections were confirmed to parse.
+- **Single-file undo.** The restore path now lives inside `EmojiFontUpdater.cmd` behind
+  the `-Undo` switch; the separate `revert-emoji.ps1` was removed. The tool is one file
+  that both updates and restores the font.
+- **Refactor.** The swap logic (back up, stage, move-or-queue, ACLs, Font Cache restart,
+  reboot prompt) is now a single `Install-Font` function shared by the update and undo
+  flows instead of being duplicated. The embedded PowerShell section was re-verified to
+  parse, and both flows were exercised with `-DryRun`.
 
 ### Removed: bundled font binaries
 
@@ -104,5 +103,5 @@ were removed because `seguiemj.ttf` is Microsoft's property and redistribution i
 covered by the Windows licence; publishing it publicly is a takedown risk.
 
 The commit that introduced them was rewritten so the binaries are absent from the entire
-repository history, and the remote branch was force-updated. The updater and
-`revert-emoji.ps1` do not depend on them — restore from a local backup or use `-Source`.
+repository history, and the remote branch was force-updated. The tool does not depend on
+them — restore from a local backup or use `-Source`.
