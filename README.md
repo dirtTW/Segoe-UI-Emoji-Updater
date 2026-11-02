@@ -51,3 +51,7 @@ stages the original 1.29 font using the same mechanism, then reboot.
 - A cumulative update or `sfc /scannow` can put an older font back; just run the script again.
 - Native Windows 10 apps (WPF/.NET Framework) draw these glyphs as monochrome outlines;
   Chromium/WebView2 apps (WhatsApp, Edge, Chrome) show full colour.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
