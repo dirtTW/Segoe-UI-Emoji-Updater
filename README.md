@@ -62,6 +62,15 @@ that temporarily and restores a normal ACL afterwards.
   redistribution isn't permitted. Restore from your own backup, or point `-Source` at a
   font file you obtained yourself.
 
+## Credits
+
+The font mirrors this tool downloads from are maintained by:
+
+- **skeyuui** — [windows-seguiemj-emoji-tracker](https://github.com/skeyuui/windows-seguiemj-emoji-tracker)
+- **Gitbreast** — [win11_emoji_for_win10](https://github.com/Gitbreast/win11_emoji_for_win10)
+
+Thanks to both for keeping a current `seguiemj.ttf` available.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

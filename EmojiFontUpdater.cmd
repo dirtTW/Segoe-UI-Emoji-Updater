@@ -61,6 +61,9 @@ $TID   = '*S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464'  # Tr
 $ACID  = '*S-1-15-2-1'                                                      # ALL APPLICATION PACKAGES
 $RACID = '*S-1-15-2-2'                                                      # ALL RESTRICTED APPLICATION PACKAGES
 
+# Font mirrors, with thanks to their maintainers:
+#   skeyuui   - https://github.com/skeyuui/windows-seguiemj-emoji-tracker
+#   Gitbreast - https://github.com/Gitbreast/win11_emoji_for_win10
 $Sources = @(
     'https://raw.githubusercontent.com/skeyuui/windows-seguiemj-emoji-tracker/main/seguiemj.ttf',
     'https://raw.githubusercontent.com/Gitbreast/win11_emoji_for_win10/main/newest/seguiemj.ttf'
